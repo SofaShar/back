@@ -75,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </form>
 </body>
 </html>
-u82255@web-server:~/www/project$ cat form.php
 <?php
 session_start();
 require 'db.php';
