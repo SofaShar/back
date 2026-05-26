@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Инициализация сессии
 session_start();
 
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ct = $_SERVER['CONTENT_TYPE'] ?? '';
         if (stripos($ct, 'application/json') === 0) {
             $raw = file_get_contents('php://input');
-            $data = json_decode($raw, true);    
+            $data = json_decode($raw, true);
             return is_array($data) ? $data : null;
         }
         return null;
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = $json ?? $_POST; // Использовать JSON или POST-данные
 
     // Поиск пользователя по логину
-    $stmt = $pdo->prepare("SELECT id, password_hash FROM userspr WHERE username = :user");
+    $stmt = $pdo->prepare("SELECT id, password_hash FROM users WHERE username = :user");
     $stmt->execute([':user' => $input['username']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($input['password'], $user['password_hash'])) {
         $_SESSION['user_id'] = $user['id'];
         setcookie("username", $input['username'], time() + 3600, '/'); // Установка cookie на 1 час
-        header('Location: edit.php'); 
+        header('Location: /project/edit.php');
         exit;
     } else {
         $msg = 'Неверный логин или пароль.';
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Доступ к редактированию</title>
     <link rel='stylesheet' href='profileloginstyle.css'>
-    <script defer src="login.js"></script>
+    <script defer src="/project/login.js"></script>
 </head>
 <body>
   <div class="page-container">
@@ -77,12 +77,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </form>
 
-    <form class="register-form" action="index.php" method="get">
+    <form class="register-form" action="/project/index.php" method="get">
       <p class="register-prompt">Еще не зарегистрированы?</p>
       <div class="form-actions">
         <input type="submit" value="Зарегистрироваться" class="buttons register-button">
       </div>
     </form>
+<div style="text-align: center; margin-top: 15px;">
+    <a href="/project/index.php" style="color: #e0effd; text-decoration: none;">← Вернуться на сайт</a>
+</div>
+
   </div>
 </body>
 
